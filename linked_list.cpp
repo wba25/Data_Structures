@@ -39,7 +39,7 @@ class Linked_list{
 		Node<T>* create_list();
 		bool is_empty(Node<T>* head);
 		void add_end(Node<T>* head, T value);
-		void remove(Node<T>* head, T value);
+		void del(Node<T>* head, T value);
 		void print_list(Node<T>* head);
 		int getSize();
 };
@@ -79,13 +79,32 @@ void Linked_list<T>::add_end(Node<T>* head, T value){
 }
 
 template <class T>
+void Linked_list<T>::del(Node<T>* head, T value){
+	if(this->is_empty(head)) return;
+	bool find = false;
+	Node<T>* before = head;
+	Node<T>* select = head;
+	for(int i = 0; !find && i<size; i++){
+		before = select;
+		select = select->getNext();
+		if(select->getValue() == value) find = true;
+	}
+	if(!find){
+		cout << "Valor nao encontrado!" << endl;
+		return;
+	}
+	before->setNext(select->getNext());
+	delete select;
+	this->size--;
+}
+
+template <class T>
 void Linked_list<T>::print_list(Node<T>* head){
 	if(this->is_empty(head)) cout << "Lista vazia!" << endl;
 	else{
 		Node<T>* temp = head->getNext();
-		for(int i=0; i<this->size;i++){
+		for(int i=0; i<this->size;i++, temp = temp->getNext()) {
 			cout << i+1 << " - " << temp->getValue() << endl;
-			temp = temp->getNext();
 		}
 	}
 }
@@ -93,12 +112,13 @@ void Linked_list<T>::print_list(Node<T>* head){
 int main(){
 	Linked_list<int> list;
 	Node<int>* head = list.create_list();
-	/*
+	
 	list.add_end(head,10);
 	list.add_end(head,20);
 	list.add_end(head,30);
 	list.add_end(head,40);
-	*/
+	list.del(head,10);
+	list.del(head,30);
 	list.print_list(head);
 	
 	return 0;
